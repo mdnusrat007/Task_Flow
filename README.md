@@ -1,4 +1,4 @@
-# ⬡ TaskFlow — Team Task Manager
+[# ⬡ TaskFlow — Team Task Manager
 
 A full-stack team task management app. Admins create projects and assign tasks; members track and update their work.
 
@@ -15,9 +15,8 @@ A full-stack team task management app. Admins create projects and assign tasks; 
 5. [Run Locally — Client](#5-run-locally--client)
 6. [Environment Variables Reference](#6-environment-variables-reference)
 7. [API Reference](#7-api-reference)
-8. [Deploy to Railway](#8-deploy-to-railway)
+8. [railway-deployement](#Deploy-to-Railway)
 9. [Roles & Permissions](#9-roles--permissions)
-10. [Troubleshooting](#10-troubleshooting)
 
 ---
 
@@ -95,11 +94,11 @@ npm --version     # Should print 9.x.x or higher
 
 ## 3. MongoDB Setup
 
-You need a MongoDB database. Choose **one** of the two options below.
+You need a MongoDB database.
 
 ---
 
-### Option A — MongoDB Atlas (Recommended, Free, Cloud)
+### MongoDB Atlas (Recommended, Free, Cloud)
 
 **Use this for both local development and production deployment.**
 
@@ -133,33 +132,6 @@ You need a MongoDB database. Choose **one** of the two options below.
 
 ---
 
-### Option B — Local MongoDB (Offline Development Only)
-
-**macOS:**
-```bash
-brew tap mongodb/brew
-brew install mongodb-community@7.0
-brew services start mongodb-community@7.0
-```
-
-**Ubuntu/Debian:**
-```bash
-sudo apt-get install -y mongodb
-sudo systemctl start mongodb
-sudo systemctl enable mongodb
-```
-
-**Windows:**
-Download the installer from https://www.mongodb.com/try/download/community and run it.
-
-Your connection string will be:
-```
-MONGODB_URI=mongodb://localhost:27017/taskflow
-```
-
-> ⚠️ Local MongoDB only works on your machine. Use Atlas for deployment.
-
----
 
 ## 4. Run Locally — Server
 
@@ -171,14 +143,14 @@ cd taskflow/server
 npm install
 
 # Step 3: Create your environment file
-cp .env.example .env
+.env
 ```
 
 Now open `server/.env` in any text editor and fill in your values:
 
 ```env
 MONGODB_URI=mongodb+srv://taskflow_user:yourpassword@cluster0.xxxxx.mongodb.net/taskflow?retryWrites=true&w=majority
-JWT_SECRET=pick_any_long_random_string_at_least_32_characters
+JWT_SECRET=you_secret_token
 PORT=5000
 CLIENT_URL=http://localhost:3000
 ```
@@ -190,8 +162,8 @@ npm run dev
 
 You should see:
 ```
-✅ MongoDB connected: cluster0.xxxxx.mongodb.net
-🚀 Server running on http://localhost:5000
+MongoDB connected: cluster0.xxxxx.mongodb.net
+Server running on http://localhost:5000
 ```
 
 **Test the server is alive:**
@@ -214,7 +186,7 @@ cd taskflow/client
 npm install
 
 # Step 3: Create your environment file
-cp .env.example .env
+.env
 ```
 
 Open `client/.env` and set:
@@ -253,7 +225,7 @@ The app opens automatically at **http://localhost:3000**
 
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
-| `REACT_APP_API_URL` | ✅ | Backend API base URL | `http://localhost:5000/api` |
+| `REACT_APP_API_URL` | Backend API base URL | `http://localhost:5000/api` |
 
 > All React environment variables **must** start with `REACT_APP_` or React will ignore them.
 
@@ -303,25 +275,25 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-#### `GET /api/auth/profile` — 🔒 Protected
+#### `GET /api/auth/profile` —  Protected
 Returns the currently logged-in user object.
 
 ---
 
-#### `GET /api/auth/users` — 🔒 Protected
+#### `GET /api/auth/users` —  Protected
 Returns all users (used to populate assignment dropdowns in the UI).
 
 ---
 
 ### Project Endpoints
 
-#### `GET /api/projects` — 🔒 Protected
+#### `GET /api/projects` —  Protected
 - Admin: returns all projects
 - Member: returns only projects they are a member of
 
 ---
 
-#### `POST /api/projects` — 🔒 Admin only
+#### `POST /api/projects` —  Admin only
 **Body:**
 ```json
 {
@@ -334,19 +306,19 @@ Returns all users (used to populate assignment dropdowns in the UI).
 
 ---
 
-#### `PUT /api/projects/:id` — 🔒 Admin only
+#### `PUT /api/projects/:id` —  Admin only
 Same fields as POST, all optional (partial update supported).
 
 ---
 
-#### `DELETE /api/projects/:id` — 🔒 Admin only
+#### `DELETE /api/projects/:id` —  Admin only
 Also deletes all tasks belonging to the project.
 
 ---
 
 ### Task Endpoints
 
-#### `GET /api/tasks` — 🔒 Protected
+#### `GET /api/tasks` —  Protected
 - Admin: all tasks
 - Member: only tasks assigned to them
 
@@ -354,7 +326,7 @@ Optional query params: `?status=Todo` · `?project=projectId`
 
 ---
 
-#### `POST /api/tasks` — 🔒 Admin only
+#### `POST /api/tasks` —  Admin only
 **Body:**
 ```json
 {
@@ -370,13 +342,13 @@ Status values: `Todo` · `In Progress` · `Completed`
 
 ---
 
-#### `PUT /api/tasks/:id` — 🔒 Protected
+#### `PUT /api/tasks/:id` —  Protected
 - Admin: can update any field
 - Member: can only update `status` on tasks assigned to them
 
 ---
 
-#### `DELETE /api/tasks/:id` — 🔒 Admin only
+#### `DELETE /api/tasks/:id` —  Admin only
 
 ---
 
@@ -466,8 +438,8 @@ Railway hosts both the Node.js server and React client as separate services.
 
 **Check server logs:** In Railway, click the server service → **"Deployments"** → click the latest deploy → view logs. You should see:
 ```
-✅ MongoDB connected: cluster0.xxxxx.mongodb.net
-🚀 Server running on http://0.0.0.0:5000
+MongoDB connected: cluster0.xxxxx.mongodb.net
+Server running on http://0.0.0.0:5000
 ```
 
 ---
@@ -501,78 +473,4 @@ Railway hosts both the Node.js server and React client as separate services.
 | Update task status (own tasks) | ✅ | ✅ |
 | Edit all task fields | ✅ | ❌ |
 | Delete task | ✅ | ❌ |
-
----
-
-## 10. Troubleshooting
-
-### Server won't start
-```
-Error: Cannot find module 'express'
-```
-→ Run `npm install` inside the `server/` folder.
-
----
-
-### MongoDB connection fails
-```
-❌ MongoDB connection error: Authentication failed
-```
-→ Check your `MONGODB_URI` — the password may contain special characters. URL-encode them (e.g. `@` → `%40`).
-
-```
-❌ MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
-```
-→ Local MongoDB is not running. Start it with `brew services start mongodb-community` (macOS) or `sudo systemctl start mongod` (Linux).
-
----
-
-### API returns 401 on every request
-→ The JWT token is missing or expired. Clear localStorage in the browser and log in again.
-
----
-
-### CORS errors in browser
-```
-Access to XMLHttpRequest blocked by CORS policy
-```
-→ Make sure the server's `CLIENT_URL` exactly matches your frontend URL including protocol (`https://`) and no trailing slash.
-
----
-
-### Blank white page after build
-→ Open browser DevTools → Console. Usually means `REACT_APP_API_URL` is not set or is wrong. Rebuild the client after fixing the env variable.
-
----
-
-### Railway build fails
-```
-npm ERR! Cannot read properties of null (reading 'matches')
-```
-→ Delete `package-lock.json` from the failing service folder and push again. Railway will re-resolve dependencies.
-
----
-
-### Atlas IP whitelist
-If the server connects locally but not on Railway, go to Atlas → **Network Access** → ensure `0.0.0.0/0` is in the allowed list.
-
----
-
-## Quick Reference Commands
-
-```bash
-# Start server (development with auto-reload)
-cd server && npm run dev
-
-# Start server (production)
-cd server && npm start
-
-# Start client (development)
-cd client && npm start
-
-# Build client for production
-cd client && npm run build
-
-# Serve production build locally (to test before deploy)
-cd client && npx serve -s build
-```
+](https://github.com/mdnusrat007/Task_Flow.git)
