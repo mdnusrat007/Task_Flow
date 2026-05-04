@@ -7,9 +7,7 @@ server/node_modules/
 dist/
 build/
 out/
-client/build/
 client/dist/
-server/build/
 server/dist/
 .next/
 
