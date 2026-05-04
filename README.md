@@ -473,4 +473,8 @@ Server running on http://0.0.0.0:5000
 | Update task status (own tasks) | ✅ | ✅ |
 | Edit all task fields | ✅ | ❌ |
 | Delete task | ✅ | ❌ |
+<<<<<<< HEAD
 ](https://github.com/mdnusrat007/Task_Flow.git)
+=======
+](https://github.com/mdnusrat007/Task_Flow.git)
+>>>>>>> fbc0166e5b7cbaaebc6089ef4284d53a177cf5e8
