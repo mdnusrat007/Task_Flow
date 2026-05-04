@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || '/api',
+  baseURL: process.env.REACT_APP_API_URL || 'https://accurate-perfection-production-b282.up.railway.app:5000/api',
 });
 
-API.interceptors.request.use((config) => {
+API.interceptors.request.use((config) => {    
   const token = localStorage.getItem('token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
