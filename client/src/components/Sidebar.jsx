@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { Icons } from './Shared';
+import { useAuth } from '../context/AuthContext.jsx';
+import { Icons } from './Shared.jsx';
 
 export default function Sidebar() {
   const { user, logoutUser } = useAuth();

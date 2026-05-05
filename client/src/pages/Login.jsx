@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../utils/api';
-import { useAuth } from '../context/AuthContext';
-import { Alert, Spinner } from '../components/Shared';
+import { useAuth } from '../context/AuthContext.jsx';
+import { Alert, Spinner } from '../components/Shared.jsx';
 
 export default function Login() {
   const { loginUser } = useAuth();

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../components/Sidebar';
-import { Modal, Alert, Spinner, Icons } from '../components/Shared';
+import Sidebar from '../components/Sidebar.jsx';
+import { Modal, Alert, Spinner, Icons } from '../components/Shared.jsx';
 import { getProjects, createProject, updateProject, deleteProject, getUsers } from '../utils/api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const emptyForm = { name: '', description: '', deadline: '', members: [] };
 

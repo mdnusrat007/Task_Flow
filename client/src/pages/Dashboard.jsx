@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../components/Sidebar.jsx';
 import { getTasks, getProjects } from '../utils/api';
-import { LoadingPage, Badge } from '../components/Shared';
+import { LoadingPage, Badge } from '../components/Shared.jsx';
 
 export default function Dashboard() {
   const [projects, setProjects] = useState([]);

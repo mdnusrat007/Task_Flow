@@ -192,12 +192,12 @@ npm install
 Open `client/.env` and set:
 
 ```env
-REACT_APP_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5000/api
 ```
 
 ```bash
-# Step 4: Start the React development server
-npm start
+# Step 4: Start the Vite development server
+npm run dev
 ```
 
 The app opens automatically at **http://localhost:3000**

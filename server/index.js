@@ -12,17 +12,13 @@ const app = express();
 
 // ─── Middleware ───────────────────────────────────────────
 app.use(cors({
-<<<<<<< HEAD
   origin: process.env.CLIENT_URL || 'https://localhost:3000',
-=======
-  origin: 'https://taskflow-production-e9af.up.railway.app',
->>>>>>> b0ebf442bdb5e530e5319768be55162915e92bb6
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.options('*', cors({
-  origin: 'https://taskflow-production-e9af.up.railway.app',
+  origin: process.env.CLIENT_URL || 'https://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
