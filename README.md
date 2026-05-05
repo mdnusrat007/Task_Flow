@@ -2,7 +2,7 @@
 
 A full-stack team task management app. Admins create projects and assign tasks; members track and update their work.
 
-**Stack:** React 18 · Node.js · Express · MongoDB · JWT Auth · Railway Deployment
+**Stack:** React 18 · Node.js · Express · MongoDB · JWT Auth · Docker · Railway Deployment
 
 ---
 
@@ -11,12 +11,13 @@ A full-stack team task management app. Admins create projects and assign tasks; 
 1. [Project Structure](#1-project-structure)
 2. [Prerequisites](#2-prerequisites)
 3. [MongoDB Setup](#3-mongodb-setup)
-4. [Run Locally — Server](#4-run-locally--server)
-5. [Run Locally — Client](#5-run-locally--client)
-6. [Environment Variables Reference](#6-environment-variables-reference)
-7. [API Reference](#7-api-reference)
-8. [railway-deployement](#Deploy-to-Railway)
-9. [Roles & Permissions](#9-roles--permissions)
+4. [Run with Docker](#4-run-with-docker)
+5. [Run Locally — Server](#5-run-locally--server)
+6. [Run Locally — Client](#6-run-locally--client)
+7. [Environment Variables Reference](#7-environment-variables-reference)
+8. [API Reference](#8-api-reference)
+9. [Deploy to Railway](#9-deploy-to-railway)
+10. [Roles & Permissions](#10-roles--permissions)
 
 ---
 
@@ -83,6 +84,7 @@ Install these before anything else:
 | Node.js | v18 or higher | https://nodejs.org |
 | npm | v9 or higher | Comes with Node.js |
 | Git | Any | https://git-scm.com |
+| Docker | Latest | https://docker.com/products/docker-desktop |
 
 Verify installation:
 ```bash
@@ -132,8 +134,57 @@ You need a MongoDB database.
 
 ---
 
+## 4. Run with Docker
 
-## 4. Run Locally — Server
+**Fastest way to run the entire app locally:**
+
+### Step 1: Create root `.env` file
+
+Create `.env` in the repo root (`taskflow-fullstack/.env`):
+
+```env
+MONGODB_URI=mongodb://mongo:27017/taskflow
+JWT_SECRET=your_jwt_secret_key_here_minimum_30_characters
+CLIENT_URL=http://localhost:8080
+REACT_APP_API_URL=http://server:5000/api
+```
+
+> For local Docker, use `mongodb://mongo:27017/taskflow` (internal Docker network)
+
+### Step 2: Start all services
+
+```bash
+cd taskflow-fullstack
+docker compose up --build
+```
+
+This will:
+- Build and start the **MongoDB** container
+- Build and start the **Express server** (port 5000)
+- Build and start the **React client** with Nginx (port 8080)
+
+### Step 3: Access the app
+
+- **Frontend:** http://localhost:8080
+- **Backend API:** http://localhost:5000/api
+- **MongoDB:** localhost:27017
+
+### Useful Docker commands
+
+```bash
+# Stop all containers
+docker compose down
+
+# View logs
+docker compose logs -f
+
+# Stop and remove volumes (cleanup everything)
+docker compose down -v
+```
+
+---
+
+## 5. Run Locally — Server
 
 ```bash
 # Step 1: Navigate to the server folder
@@ -174,7 +225,7 @@ curl http://localhost:5000/api/health
 
 ---
 
-## 5. Run Locally — Client
+## 6. Run Locally — Client
 
 Open a **new terminal window** (keep the server running in the first one).
 
@@ -210,7 +261,7 @@ The app opens automatically at **http://localhost:3000**
 
 ---
 
-## 6. Environment Variables Reference
+## 7. Environment Variables Reference
 
 ### `server/.env`
 
@@ -231,7 +282,7 @@ The app opens automatically at **http://localhost:3000**
 
 ---
 
-## 7. API Reference
+## 8. API Reference
 
 ### Base URL
 - Local: `http://localhost:5000/api`
@@ -362,7 +413,7 @@ Common status codes: `400` Bad Request · `401` Unauthorized · `403` Forbidden 
 
 ---
 
-## 8. Deploy to Railway
+## 9. Deploy to Railway
 
 Railway hosts both the Node.js server and React client as separate services.
 
@@ -457,7 +508,7 @@ Server running on http://0.0.0.0:5000
 
 ---
 
-## 9. Roles & Permissions
+## 10. Roles & Permissions
 
 | Action | Admin | Member |
 |--------|:-----:|:------:|
