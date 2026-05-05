@@ -12,7 +12,7 @@ const app = express();
 
 // ─── Middleware ───────────────────────────────────────────
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'https://taskflow-production-e9af.up.railway.app',
+  origin: process.env.CLIENT_URL || 'https://localhost:3000',
   credentials: true,
 }));
 

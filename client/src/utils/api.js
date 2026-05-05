@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'https://accurate-perfection-production-b282.up.railway.app/api',
+  baseURL: process.env.REACT_APP_API_URL || 'https://localhost:5000/api',
 });
 
 API.interceptors.request.use((config) => {    
