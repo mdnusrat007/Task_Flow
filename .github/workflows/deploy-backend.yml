@@ -1,0 +1,55 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # Build Frontend
+      - name: Install frontend dependencies
+        working-directory: ./client
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: ./client
+        run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
+      # Deploy Backend to Railway
+      - name: Deploy backend to Railway
+        uses: railwayapp/railway-action@v1
+        with:
+          token: ${{ secrets.RAILWAY_TOKEN }}
+          service: backend
+          inputs: |
+            PORT=5000
+            MONGODB_URI=${{ secrets.MONGODB_URI }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            CLIENT_URL=${{ secrets.CLIENT_URL }}
+
+      # Deploy Frontend to Railway
+      - name: Deploy frontend to Railway
+        uses: railwayapp/railway-action@v1
+        with:
+          token: ${{ secrets.RAILWAY_TOKEN }}
+          service: frontend
+          inputs: |
+            PORT=3000
+            BUILD_COMMAND=npm run build
+            START_COMMAND=npm run preview
