@@ -2,7 +2,7 @@
 
 A full-stack team task management app. Admins create projects and assign tasks; members track and update their work.
 
-**Stack:** React 18 · Node.js · Express · MongoDB · JWT Auth · Docker · Railway Deployment
+**Stack:** React 18 · Node.js · Express · MongoDB · JWT Auth · GitHub Actions · Railway Deployment
 
 ---
 
@@ -11,13 +11,12 @@ A full-stack team task management app. Admins create projects and assign tasks; 
 1. [Project Structure](#1-project-structure)
 2. [Prerequisites](#2-prerequisites)
 3. [MongoDB Setup](#3-mongodb-setup)
-4. [Run with Docker](#4-run-with-docker)
-5. [Run Locally — Server](#5-run-locally--server)
-6. [Run Locally — Client](#6-run-locally--client)
-7. [Environment Variables Reference](#7-environment-variables-reference)
-8. [API Reference](#8-api-reference)
-9. [Deploy to Railway](#9-deploy-to-railway)
-10. [Roles & Permissions](#10-roles--permissions)
+4. [Run Locally — Server](#4-run-locally--server)
+5. [Run Locally — Client](#5-run-locally--client)
+6. [Environment Variables Reference](#6-environment-variables-reference)
+7. [API Reference](#7-api-reference)
+8. [Deploy to Railway](#8-deploy-to-railway)
+9. [Roles & Permissions](#9-roles--permissions)
 
 ---
 
@@ -84,7 +83,6 @@ Install these before anything else:
 | Node.js | v18 or higher | https://nodejs.org |
 | npm | v9 or higher | Comes with Node.js |
 | Git | Any | https://git-scm.com |
-| Docker | Latest | https://docker.com/products/docker-desktop |
 
 Verify installation:
 ```bash
@@ -134,57 +132,7 @@ You need a MongoDB database.
 
 ---
 
-## 4. Run with Docker
-
-**Fastest way to run the entire app locally:**
-
-### Step 1: Create root `.env` file
-
-Create `.env` in the repo root (`taskflow-fullstack/.env`):
-
-```env
-MONGODB_URI=mongodb://mongo:27017/taskflow
-JWT_SECRET=your_jwt_secret_key_here_minimum_30_characters
-CLIENT_URL=http://localhost:8080
-REACT_APP_API_URL=http://server:5000/api
-```
-
-> For local Docker, use `mongodb://mongo:27017/taskflow` (internal Docker network)
-
-### Step 2: Start all services
-
-```bash
-cd taskflow-fullstack
-docker compose up --build
-```
-
-This will:
-- Build and start the **MongoDB** container
-- Build and start the **Express server** (port 5000)
-- Build and start the **React client** with Nginx (port 8080)
-
-### Step 3: Access the app
-
-- **Frontend:** http://localhost:8080
-- **Backend API:** http://localhost:5000/api
-- **MongoDB:** localhost:27017
-
-### Useful Docker commands
-
-```bash
-# Stop all containers
-docker compose down
-
-# View logs
-docker compose logs -f
-
-# Stop and remove volumes (cleanup everything)
-docker compose down -v
-```
-
----
-
-## 5. Run Locally — Server
+## 4. Run Locally — Server
 
 ```bash
 # Step 1: Navigate to the server folder
@@ -225,7 +173,7 @@ curl http://localhost:5000/api/health
 
 ---
 
-## 6. Run Locally — Client
+## 5. Run Locally — Client
 
 Open a **new terminal window** (keep the server running in the first one).
 
@@ -243,8 +191,10 @@ npm install
 Open `client/.env` and set:
 
 ```env
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5000
 ```
+
+> Note: `/api` is automatically appended to all requests
 
 ```bash
 # Step 4: Start the Vite development server
@@ -261,7 +211,7 @@ The app opens automatically at **http://localhost:3000**
 
 ---
 
-## 7. Environment Variables Reference
+## 6. Environment Variables Reference
 
 ### `server/.env`
 
@@ -276,13 +226,13 @@ The app opens automatically at **http://localhost:3000**
 
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
-| `REACT_APP_API_URL` | Backend API base URL | `http://localhost:5000/api` |
+| `VITE_API_URL` | ✅ | Backend base URL (without `/api`) | `http://localhost:5000` |
 
-> All React environment variables **must** start with `REACT_APP_` or React will ignore them.
+> The `/api` path is automatically appended to all API requests
 
 ---
 
-## 8. API Reference
+## 7. API Reference
 
 ### Base URL
 - Local: `http://localhost:5000/api`
@@ -413,102 +363,26 @@ Common status codes: `400` Bad Request · `401` Unauthorized · `403` Forbidden 
 
 ---
 
-## 9. Deploy to Railway
+## 8. Deploy to Railway
 
-Railway hosts both the Node.js server and React client as separate services.
+Railway hosts both the Node.js server and React client as separate services. GitHub Actions automatically builds and deploys both services on every push to `main`.
 
 ### Before You Start
 - Push your code to GitHub: `git push origin main`
-- Have your MongoDB Atlas URI ready (see Section 3, Option A)
+- Have your MongoDB Atlas URI ready (see Section 3)
 - Create a free Railway account at https://railway.app (sign in with GitHub)
 
----
+### Quick Setup
+1. Connect your GitHub repo to Railway
+2. Add environment variables (MONGODB_URI, JWT_SECRET, CLIENT_URL, VITE_API_URL)
+3. GitHub Actions automatically deploys both services on `git push`
+4. Get your Railway URLs and you're done!
 
-### Step 1 — Deploy the Server
-
-1. On the Railway dashboard, click **"New Project"**
-2. Select **"Deploy from GitHub repo"** → choose your repository
-3. Railway detects Node.js automatically
-4. Click the service → go to **"Settings"** tab
-5. Set **Root Directory** to `server`
-6. Under **"Deploy"**, set:
-   - **Build Command:** `npm install`
-   - **Start Command:** `npm start`
-7. Go to the **"Variables"** tab and add these one by one:
-
-   | Key | Value |
-   |-----|-------|
-   | `MONGODB_URI` | Your Atlas connection string |
-   | `JWT_SECRET` | A long random string (30+ chars) |
-   | `PORT` | `5000` |
-   | `CLIENT_URL` | Leave blank for now — fill in after client is deployed |
-
-8. Go to **"Settings" → "Networking"** → click **"Generate Domain"**
-9. Copy the generated domain — it looks like `https://server-production-xxxx.up.railway.app`
+**→ [See DEPLOYMENT.md for detailed step-by-step instructions](DEPLOYMENT.md)**
 
 ---
 
-### Step 2 — Deploy the Client
-
-1. In the same Railway project, click **"+ New"** → **"GitHub Repo"** (same repo)
-2. Click the new service → **"Settings"**
-3. Set **Root Directory** to `client`
-4. Under **"Deploy"**, set:
-   - **Build Command:** `npm install && npm run build`
-   - **Start Command:** `npx serve -s build -l 3000`
-5. Go to **"Variables"** and add:
-
-   | Key | Value |
-   |-----|-------|
-   | `REACT_APP_API_URL` | `https://your-server-domain.up.railway.app/api` |
-
-   Replace `your-server-domain` with the actual server domain from Step 1.
-
-6. Go to **"Settings" → "Networking"** → click **"Generate Domain"**
-7. Copy this client domain
-
----
-
-### Step 3 — Update Server CORS
-
-1. Go back to the **server service** → **"Variables"**
-2. Update `CLIENT_URL` to your client's Railway domain:
-   ```
-   CLIENT_URL=https://your-client-domain.up.railway.app
-   ```
-3. Railway will automatically redeploy the server
-
----
-
-### Step 4 — Verify Everything Works
-
-1. Open your client Railway URL in a browser
-2. Sign up with an Admin account
-3. Create a project, add a member, create and assign tasks
-4. Log in with the member account to verify member permissions
-
-**Check server logs:** In Railway, click the server service → **"Deployments"** → click the latest deploy → view logs. You should see:
-```
-MongoDB connected: cluster0.xxxxx.mongodb.net
-Server running on http://0.0.0.0:5000
-```
-
----
-
-### Railway Deployment Checklist
-
-```
-✅ MongoDB Atlas created with correct IP whitelist (0.0.0.0/0)
-✅ Server deployed with MONGODB_URI, JWT_SECRET, PORT, CLIENT_URL
-✅ Client deployed with REACT_APP_API_URL pointing to server
-✅ Both services have generated domains
-✅ SERVER's CLIENT_URL updated to client's Railway domain
-✅ Both services show "Active" status in Railway dashboard
-```
-
----
-
-## 10. Roles & Permissions
+## 9. Roles & Permissions
 
 | Action | Admin | Member |
 |--------|:-----:|:------:|
@@ -524,8 +398,3 @@ Server running on http://0.0.0.0:5000
 | Update task status (own tasks) | ✅ | ✅ |
 | Edit all task fields | ✅ | ❌ |
 | Delete task | ✅ | ❌ |
-<<<<<<< HEAD
-](https://github.com/mdnusrat007/Task_Flow.git)
-=======
-](https://github.com/mdnusrat007/Task_Flow.git)
->>>>>>> fbc0166e5b7cbaaebc6089ef4284d53a177cf5e8

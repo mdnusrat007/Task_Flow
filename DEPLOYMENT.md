@@ -81,7 +81,7 @@ The frontend automatically appends `/api` to the base URL. Set the base URL to y
 
 **For development** (create `.env.local` in client folder):
 ```
-VITE_API_URL=http://localhost:5000
+VITE_API_URL=http://localhost:5000/api
 ```
 
 **For production on Railway**, the secret will automatically append `/api` to requests (e.g., `https://your-backend.railway.app/api/auth/signup`).
