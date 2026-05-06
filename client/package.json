@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "serve -s dist -l $PORT",
+    "start": "serve -s dist -l 0.0.0.0:$PORT",  
     "preview": "vite preview",
     "test": "vitest"
   },
