@@ -1,21 +1,31 @@
-const { execSync } = require('child_process');
-const path = require('path');
+const { spawn } = require('child_process');
 
-// Get the port from environment variable, default to 3000 for local development
+// Read PORT from environment — Railway injects this automatically
 const port = process.env.PORT || 3000;
 
-// Use serve to serve the dist folder on the correct port
-const serveCommand = `npx serve -s dist -l ${port}`;
-
 console.log(`Starting serve on port ${port}...`);
-console.log(`Command: ${serveCommand}`);
+console.log(`Command: npx serve -s dist -l ${port}`);
 
-try {
-  execSync(serveCommand, {
-    stdio: 'inherit',
-    cwd: __dirname
-  });
-} catch (error) {
-  console.error('Failed to start serve:', error);
+// Use spawn so signals (SIGTERM, etc.) are forwarded correctly to the child
+const child = spawn('npx', ['serve', '-s', 'dist', '-l', String(port)], {
+  stdio: 'inherit',
+  cwd: __dirname,
+});
+
+child.on('error', (err) => {
+  console.error('Failed to start serve:', err);
   process.exit(1);
-}
+});
+
+child.on('exit', (code, signal) => {
+  if (signal) {
+    process.kill(process.pid, signal);
+  } else {
+    process.exit(code ?? 1);
+  }
+});
+
+// Forward Railway's shutdown signals to the child process
+['SIGTERM', 'SIGINT'].forEach((sig) => {
+  process.on(sig, () => child.kill(sig));
+});
