@@ -50,6 +50,5 @@ jobs:
           token: ${{ secrets.RAILWAY_TOKEN }}
           service: frontend
           inputs: |
-            PORT=3000
             BUILD_COMMAND=npm run build
-            START_COMMAND=npm run preview
+            START_COMMAND=npm start
